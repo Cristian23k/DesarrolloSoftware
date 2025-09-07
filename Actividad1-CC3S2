@@ -1,4 +1,4 @@
-# Actividad 1 – Introducción a DevOps y DevSecOps
+## Actividad 1 – Introducción a DevOps y DevSecOps
 
 **Curso:** CC3S2 Desarrollo de Software  
 **Estudiante:** <Tu nombre>  
@@ -6,19 +6,19 @@
 **Tiempo invertido:** <hh:mm>
 
 **Entorno usado (breve y sin datos sensibles):**  
-Navegador web (DevTools), sitios públicos para DNS/TLS y diagramado en draw.io/Excalidraw.  
+Navegador web (DevTools), sitios públicos para DNS/TLS, diagramado en draw.io/Excalidraw.  
 *(Sin credenciales ni tokens).*
 
 ---
 
-## 1. DevOps vs. Cascada Tradicional
+### 1. DevOps vs. Cascada Tradicional
 
 - **Imagen:** `imagenes/devops-vs-cascada.png`
 - DevOps acelera y reduce riesgos en la nube gracias a:
-  - Ciclos de **feedback continuo**.
-  - Trabajo en **lotes pequeños**.
-  - **Automatización** de pruebas y despliegues.
-  - **Colaboración Dev–Ops**.
+  - Ciclos de feedback continuo.
+  - Trabajo en lotes pequeños.
+  - Automatización de pruebas y despliegues.
+  - Colaboración Dev–Ops.
 - Impacto: menor *lead time*, menor tasa de fallos, MTTR más bajo.
 - **Contexto válido para cascada:** sistemas con certificaciones regulatorias estrictas.  
   - *Criterio 1:* conformidad obligatoria con checklist firmado por QA externo.  
@@ -27,7 +27,7 @@ Navegador web (DevTools), sitios públicos para DNS/TLS y diagramado en draw.io/
 
 ---
 
-## 2. Ciclo Tradicional y Silos
+### 2. Ciclo Tradicional y Silos
 
 - **Imagen:** `imagenes/silos-equipos.png`
 - Limitaciones sin CI:
@@ -39,7 +39,7 @@ Navegador web (DevTools), sitios públicos para DNS/TLS y diagramado en draw.io/
 
 ---
 
-## 3. Principios y Beneficios de DevOps
+### 3. Principios y Beneficios de DevOps
 
 - **CI/CD:**
   - Cambios pequeños.
@@ -49,11 +49,11 @@ Navegador web (DevTools), sitios públicos para DNS/TLS y diagramado en draw.io/
   - Dailies y retrospectivas guían qué promover o bloquear.
 - **Indicador de colaboración (no financiero):**
   - Tiempo desde PR listo → despliegue en pruebas (p50).
-  - Meta: reducir en **30%** en 4 iteraciones.
+  - Meta: reducir en 30% en 4 iteraciones.
 
 ---
 
-## 4. Evolución a DevSecOps
+### 4. Evolución a DevSecOps
 
 - **SAST:** análisis estático temprano en artefactos y dependencias.  
 - **DAST:** dinámico, sobre la aplicación en ejecución.
@@ -70,46 +70,50 @@ Navegador web (DevTools), sitios públicos para DNS/TLS y diagramado en draw.io/
 
 ---
 
-## 5. CI/CD y Estrategias de Despliegue
+### 5. CI/CD y Estrategias de Despliegue
 
 - **Imagen:** `imagenes/pipeline_canary.png`
-- Estrategia: **Canary** (ejemplo: microservicio de autenticación).
+- Estrategia: Canary (ejemplo: microservicio de autenticación).
 - **Riesgos y mitigaciones:**
-  - Regresión funcional → validación de contrato + *smoke tests*.
-  - Costo de convivencia → límite de 60 min y rollback automático.
-  - Manejo de sesiones → draining + esquemas compatibles.
+
+| Riesgo               | Mitigación                                       |
+|----------------------|--------------------------------------------------|
+| Regresión funcional  | Validación de contrato + *smoke tests*            |
+| Costo de convivencia | Límite de 60 min y rollback automático            |
+| Manejo de sesiones   | Draining + esquemas compatibles + sticky sessions |
+
 - **KPIs:**
   - Errores 5xx ≤ 0.1% en la primera hora post-canary.
   - Conversión ≥ 95% del valor base pre-release.
 
 ---
 
-## 6. Evidencia Práctica (sin comandos)
+### 6. Evidencia Práctica (sin comandos)
 
-### HTTP – contrato observable
+#### HTTP – contrato observable
 - **Imagen:** `imagenes/http-evidencia.png`
 - Ejemplo: GET → 200, cabeceras `Cache-Control: max-age=3600` y `X-Request-ID`.
 
-### DNS – nombres y TTL
+#### DNS – nombres y TTL
 - **Imagen:** `imagenes/dns-ttl.png`
 - Ejemplo: registro A, TTL=3600s. TTL alto retrasa rollbacks.
 
-### TLS – seguridad en tránsito
+#### TLS – seguridad en tránsito
 - **Imagen:** `imagenes/tls-cert.png`
 - Ejemplo: CN/SAN correctos, válido hasta 2025.  
 - Caducado = errores de confianza + riesgo MITM.
 
-### Puertos – estado de runtime
+#### Puertos – estado de runtime
 - **Imagen:** `imagenes/puertos.png`
 - Ejemplo: 80 (HTTP) y 443 (HTTPS).  
 - Ausencia de 443 = despliegue incompleto.
 
-### 12-Factor
+#### 12-Factor
 - Port binding: configurar externamente.  
 - Logs: a stdout, no rotación manual.  
 - Anti-patrón: credenciales en repo → rompe reproducibilidad.
 
-### Checklist de diagnóstico
+#### Checklist de diagnóstico
 1. HTTP: validar método/código/cabeceras.  
 2. DNS: consistencia y TTL.  
 3. TLS: vigencia/cadena.  
@@ -119,7 +123,7 @@ Navegador web (DevTools), sitios públicos para DNS/TLS y diagramado en draw.io/
 
 ---
 
-## 7. Desafíos de DevOps y Mitigaciones
+### 7. Desafíos de DevOps y Mitigaciones
 
 - **Imagen:** `imagenes/desafios_devops.png`
 - Riesgos comunes:
@@ -132,7 +136,7 @@ Navegador web (DevTools), sitios públicos para DNS/TLS y diagramado en draw.io/
 
 ---
 
-## 8. Arquitectura Mínima para DevSecOps
+### 8. Arquitectura Mínima para DevSecOps
 
 - **Imagen:** `imagenes/arquitectura-minima.png`
 - Flujo: Cliente → DNS → HTTP → TLS.  
@@ -143,7 +147,7 @@ Navegador web (DevTools), sitios públicos para DNS/TLS y diagramado en draw.io/
 
 ---
 
-## Evidencias Incluidas
+### Evidencias Incluidas
 
 - Código de estado + 2 cabeceras HTTP.  
 - Registro y TTL DNS.  
@@ -154,10 +158,10 @@ Navegador web (DevTools), sitios públicos para DNS/TLS y diagramado en draw.io/
 
 ---
 
-## Trazabilidad de Commits
+### Trazabilidad de Commits
 
-1. Día 1 – Comparativos e imágenes base.  
-2. Día 2 – DevSecOps y estrategia de despliegue.  
-3. Día 3 – Evidencia, diagramas y entrega final.  
-4. Entrega actividad 1.
+- Día 1 – Comparativos e imágenes base.  
+- Día 2 – DevSecOps y estrategia de despliegue.  
+- Día 3 – Evidencia, diagramas y entrega final.  
+- Entrega actividad 1.
 
