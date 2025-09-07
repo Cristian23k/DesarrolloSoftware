@@ -1,1 +1,163 @@
+# Actividad 1 – Introducción a DevOps y DevSecOps
+
+**Curso:** CC3S2 Desarrollo de Software  
+**Estudiante:** <Tu nombre>  
+**Fecha:** 07/09/2025  
+**Tiempo invertido:** <hh:mm>
+
+**Entorno usado (breve y sin datos sensibles):**  
+Navegador web (DevTools), sitios públicos para DNS/TLS y diagramado en draw.io/Excalidraw.  
+*(Sin credenciales ni tokens).*
+
+---
+
+## 1. DevOps vs. Cascada Tradicional
+
+- **Imagen:** `imagenes/devops-vs-cascada.png`
+- DevOps acelera y reduce riesgos en la nube gracias a:
+  - Ciclos de **feedback continuo**.
+  - Trabajo en **lotes pequeños**.
+  - **Automatización** de pruebas y despliegues.
+  - **Colaboración Dev–Ops**.
+- Impacto: menor *lead time*, menor tasa de fallos, MTTR más bajo.
+- **Contexto válido para cascada:** sistemas con certificaciones regulatorias estrictas.  
+  - *Criterio 1:* conformidad obligatoria con checklist firmado por QA externo.  
+  - *Criterio 2:* cambios agrupados y aprobados por el regulador.  
+  - *Trade-off:* conformidad alta vs. velocidad baja.
+
+---
+
+## 2. Ciclo Tradicional y Silos
+
+- **Imagen:** `imagenes/silos-equipos.png`
+- Limitaciones sin CI:
+  - Lotes grandes → más retrabajos.
+  - Colas de defectos y costo de integración tardía.
+- Anti-patrones:
+  - *Throw over the wall*: Dev entrega a Ops sin contexto → MTTR más alto.
+  - *Seguridad tardía*: hallazgos al final → bloqueos y retrabajos.
+
+---
+
+## 3. Principios y Beneficios de DevOps
+
+- **CI/CD:**
+  - Cambios pequeños.
+  - Pruebas automatizadas cerca del código.
+  - Pipelines reproducibles.
+- **Agile como precursor:**
+  - Dailies y retrospectivas guían qué promover o bloquear.
+- **Indicador de colaboración (no financiero):**
+  - Tiempo desde PR listo → despliegue en pruebas (p50).
+  - Meta: reducir en **30%** en 4 iteraciones.
+
+---
+
+## 4. Evolución a DevSecOps
+
+- **SAST:** análisis estático temprano en artefactos y dependencias.  
+- **DAST:** dinámico, sobre la aplicación en ejecución.
+- **Gate mínimo de seguridad:**
+  - SAST: 0 vulnerabilidades críticas (CVSS ≥ 7.0).
+  - DAST: ≥ 80% de cobertura en rutas críticas.
+- **Excepciones:**
+  - Máx. 7 días.
+  - Responsable asignado.
+  - Plan de mitigación (ej. WAF temporal).
+- **Cómo evitar el “teatro de seguridad”:**
+  - Reducir hallazgos repetidos ≤ 5%.
+  - Tiempo de remediación ≤ 48h.
+
+---
+
+## 5. CI/CD y Estrategias de Despliegue
+
+- **Imagen:** `imagenes/pipeline_canary.png`
+- Estrategia: **Canary** (ejemplo: microservicio de autenticación).
+- **Riesgos y mitigaciones:**
+  - Regresión funcional → validación de contrato + *smoke tests*.
+  - Costo de convivencia → límite de 60 min y rollback automático.
+  - Manejo de sesiones → draining + esquemas compatibles.
+- **KPIs:**
+  - Errores 5xx ≤ 0.1% en la primera hora post-canary.
+  - Conversión ≥ 95% del valor base pre-release.
+
+---
+
+## 6. Evidencia Práctica (sin comandos)
+
+### HTTP – contrato observable
+- **Imagen:** `imagenes/http-evidencia.png`
+- Ejemplo: GET → 200, cabeceras `Cache-Control: max-age=3600` y `X-Request-ID`.
+
+### DNS – nombres y TTL
+- **Imagen:** `imagenes/dns-ttl.png`
+- Ejemplo: registro A, TTL=3600s. TTL alto retrasa rollbacks.
+
+### TLS – seguridad en tránsito
+- **Imagen:** `imagenes/tls-cert.png`
+- Ejemplo: CN/SAN correctos, válido hasta 2025.  
+- Caducado = errores de confianza + riesgo MITM.
+
+### Puertos – estado de runtime
+- **Imagen:** `imagenes/puertos.png`
+- Ejemplo: 80 (HTTP) y 443 (HTTPS).  
+- Ausencia de 443 = despliegue incompleto.
+
+### 12-Factor
+- Port binding: configurar externamente.  
+- Logs: a stdout, no rotación manual.  
+- Anti-patrón: credenciales en repo → rompe reproducibilidad.
+
+### Checklist de diagnóstico
+1. HTTP: validar método/código/cabeceras.  
+2. DNS: consistencia y TTL.  
+3. TLS: vigencia/cadena.  
+4. Puertos: 80/443 expuestos.  
+5. KPIs: comparar canary vs. control.  
+6. Logs: correlación con X-Request-ID.
+
+---
+
+## 7. Desafíos de DevOps y Mitigaciones
+
+- **Imagen:** `imagenes/desafios_devops.png`
+- Riesgos comunes:
+  - Cambios no observables → feature flags + rollback probado.
+  - Blast radius amplio → canary + límites claros.
+  - Error humano → revisión cruzada + runbooks automatizados.
+- **Experimento:** comparar canary vs. big-bang.  
+  - Métrica: 5xx y latencia p95.  
+  - Éxito: reducción ≥ 50% en fallos.
+
+---
+
+## 8. Arquitectura Mínima para DevSecOps
+
+- **Imagen:** `imagenes/arquitectura-minima.png`
+- Flujo: Cliente → DNS → HTTP → TLS.  
+- Controles: caché, validación de certificados, contratos API, rate limiting.  
+- Principios 12-Factor aplicados:
+  - Config por entorno → diffs mínimos.  
+  - Logs a stdout → trazabilidad.
+
+---
+
+## Evidencias Incluidas
+
+- Código de estado + 2 cabeceras HTTP.  
+- Registro y TTL DNS.  
+- CN/SAN y vigencia TLS.  
+- Puertos en escucha.  
+- Umbrales numéricos en gates/KPIs.  
+- Checklist operativo con decisiones claras.
+
+---
+
+## Trazabilidad de Commits
+
+1. Día 1 – Comparativos e imágenes base.  
+2. Día 2 – DevSecOps y estrategia de despliegue.  
+3. Día 3 – Evidencia, diagramas y entrega final.  
+4. Entrega actividad 1.
 
