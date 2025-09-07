@@ -5,163 +5,167 @@
 **Fecha:** 30/08/2025  
 **Tiempo invertido:** 1h:30min  
 
-**Entorno usado (breve y sin datos sensibles):**  
+**Entorno usado:**  
 Navegador web (DevTools), sitios públicos para DNS/TLS y diagramado en draw.io/Excalidraw.  
-*(Sin credenciales ni tokens).*
+Sin credenciales ni tokens.
 
 ---
 
 ### 1. DevOps vs. Cascada Tradicional
 
-- **Imagen:** `imagenes/devops-vs-cascada.png`  
-- **Síntesis:**  
-  DevOps acelera y reduce riesgo en la nube al acortar ciclos de feedback, trabajar en lotes pequeños, automatizar pruebas y despliegues y alinear Dev–Ops. Esto reduce *lead time*, tasa de fallos y mejora MTTR (métricas DORA [1]).  
-  La **configuración externa** y **port binding** (12-Factor [2]) favorecen reproducibilidad entre entornos.
+![DevOps vs Cascada](imagenes/devops-vs-cascada.png)
 
-- **Contexto válido para cascada:**  
-  - Sistemas con certificaciones regulatorias estrictas (p. ej., médicos/aeronáuticos).  
-  - *Criterio 1:* cada release requiere evidencia de conformidad (checklist firmado por QA externo).  
-  - *Criterio 2:* cambios agrupados con aprobación regulatoria.  
-  - *Trade-off:* velocidad baja vs. conformidad/seguridad alta.
+DevOps acelera y reduce riesgo en la nube al acortar ciclos de feedback, trabajar en lotes pequeños, automatizar pruebas y despliegues y alinear Dev–Ops. Esto reduce lead time, la tasa de fallos y mejora MTTR (métricas DORA [1]). La configuración externa y port binding (12-Factor [2]) favorecen la reproducibilidad entre entornos.
+
+Un contexto donde la cascada aún es válida son los sistemas con certificaciones regulatorias estrictas, como médicos o aeronáuticos.  
+- Criterio 1: cada release requiere evidencia de conformidad con un checklist firmado por QA externo.  
+- Criterio 2: los cambios se agrupan y deben aprobarse previamente por un organismo regulador.  
+El trade-off es menor velocidad a cambio de mayor conformidad y seguridad.
 
 ---
 
 ### 2. Ciclo Tradicional y Silos
 
-- **Imagen:** `imagenes/silos-equipos.png`  
-- **Limitaciones sin CI:**  
-  - Lotes grandes → más retrabajos y regresiones.  
-  - Colas de defectos y costo de integración tardía.  
-- **Anti-patrones:**  
-  - *Throw over the wall:* Dev entrega sin contexto → MTTR alto.  
-  - *Seguridad tardía:* hallazgos al final → bloqueos y retrabajos.
+![Silos organizacionales](imagenes/silos-equipos.png)
+
+Limitaciones sin integración continua:  
+- Lotes grandes generan más retrabajos y regresiones.  
+- Colas de defectos aumentan el costo de integración tardía.  
+
+Anti-patrones:  
+- *Throw over the wall*: Dev entrega sin contexto, lo que aumenta MTTR.  
+- Seguridad tardía: los hallazgos aparecen al final y provocan bloqueos y retrabajos.
 
 ---
 
 ### 3. Principios y Beneficios de DevOps
 
-- **CI/CD:** cambios pequeños, pruebas automatizadas, pipelines reproducibles, trunk-based y feature flags.  
-- **Agile como precursor:** dailies y retrospectivas guían qué promover o bloquear.  
-- **Indicador observable (no financiero):**  
-  - Tiempo desde PR listo → despliegue en pruebas (p50).  
-  - *Cómo medir:* metadatos de PR + bitácora de despliegue.  
-  - *Meta:* reducir en **30%** en 4 iteraciones.
+La integración y entrega continua se basan en cambios pequeños, pruebas automatizadas cercanas al código y pipelines reproducibles. Agile aporta prácticas como las dailies y retrospectivas, que guían las decisiones de qué promover o bloquear.
+
+Indicador observable de colaboración:  
+- Tiempo desde PR listo hasta despliegue en pruebas (p50).  
+- Se mide con los metadatos de los PR y la bitácora de despliegue.  
+- La meta es reducir en 30% este tiempo en cuatro iteraciones.
 
 ---
 
 ### 4. Evolución a DevSecOps
 
-- **SAST:** análisis estático temprano en artefactos y dependencias.  
-- **DAST:** dinámico, sobre la aplicación en ejecución.  
-- **Gate mínimo de seguridad:**  
-  - SAST: **0** vulnerabilidades críticas/altas (CVSS ≥ 7.0).  
-  - DAST: **≥ 80%** de cobertura en rutas críticas.  
-- **Política de excepción:**  
-  - Máx. 7 días.  
-  - Responsable: *Líder técnico (J. Díaz)*.  
-  - Plan: mitigación temporal (WAF) + corrección.  
-- **Evitar “teatro de seguridad”:**  
-  - Hallazgos repetidos ≤ 5%.  
-  - Tiempo de remediación ≤ 48h.  
-- **Marco de apoyo:** NIST SSDF [3].
+- SAST: análisis estático temprano en artefactos y dependencias.  
+- DAST: análisis dinámico sobre la aplicación en ejecución.  
+
+Gate mínimo de seguridad:  
+- SAST: 0 vulnerabilidades críticas/altas (CVSS ≥ 7.0).  
+- DAST: ≥ 80% de cobertura en rutas críticas.  
+
+Política de excepción: máximo 7 días, con responsable (líder técnico) y plan de mitigación temporal mediante WAF más corrección programada.  
+
+Para evitar el “teatro de seguridad”:  
+- Reducir hallazgos repetidos a menos del 5%.  
+- Remediar vulnerabilidades críticas en un máximo de 48 horas.  
+
+Marco de apoyo: NIST SSDF [3].
 
 ---
 
 ### 5. CI/CD y Estrategias de Despliegue
 
-- **Imagen:** `imagenes/pipeline_canary.png`  
-- Estrategia: **Canary** (ejemplo: microservicio de autenticación).  
+![Pipeline Canary](imagenes/pipeline_canary.png)
 
-**Riesgos vs. Mitigaciones**
+Estrategia: despliegue canary para un microservicio de autenticación.
+
+**Riesgos y mitigaciones**
 
 | Riesgo                 | Mitigación                                                      |
 |------------------------|-----------------------------------------------------------------|
-| Regresión funcional    | Validación de contrato + smoke tests antes de promover           |
-| Costo de convivencia   | Ventana de canary de 60 min + rollback automático                |
-| Manejo de sesiones     | Draining de conexiones + esquemas compatibles + sticky sessions |
+| Regresión funcional    | Validación de contrato y smoke tests antes de promover           |
+| Costo de convivencia   | Ventana de canary de 60 min y rollback automático                |
+| Manejo de sesiones     | Draining de conexiones, esquemas compatibles y sticky sessions   |
 
 **KPIs de promoción/rollback**  
-- KPI técnico: **Errores 5xx ≤ 0.1%** en la primera hora post-canary.  
-- KPI de producto: **Conversión ≥ 95%** del baseline pre-release.  
-- **Coexistencia:** aunque los KPIs técnicos estén “verdes”, una caída en conversión puede indicar regresión funcional/UX. Por ello, ambos métricas forman parte del gate.
+- Técnico: errores 5xx ≤ 0.1% en la primera hora post-canary.  
+- Producto: conversión ≥ 95% del baseline pre-release.  
+
+Ambas métricas deben coexistir, ya que una caída en la conversión puede revelar regresiones de UX o funcionalidad aun cuando los indicadores técnicos se mantengan estables.
 
 ---
 
-### 6. Evidencia Práctica (sin comandos)
+### 6. Evidencia Práctica
 
-#### 6.1 HTTP – contrato observable
-- **Imagen:** `imagenes/http-evidencia.png`  
-- Ejemplo: GET → 200, cabeceras `Cache-Control: max-age=3600` y `X-Request-ID`.  
-- Importancia: caché mejora latencia; request-id habilita trazabilidad.
+#### HTTP – contrato observable
+![Evidencia HTTP](imagenes/http-evidencia.png)  
+Ejemplo: GET → 200, cabeceras `Cache-Control: max-age=3600` y `X-Request-ID`.  
+La caché mejora la latencia y el request-id habilita trazabilidad.
 
-#### 6.2 DNS – nombres y TTL
-- **Imagen:** `imagenes/dns-ttl.png`  
-- Ejemplo: registro A, TTL=3600s. TTL alto retrasa rollbacks; TTL bajo acelera cambios pero aumenta consultas.
+#### DNS – nombres y TTL
+![Evidencia DNS](imagenes/dns-ttl.png)  
+Ejemplo: registro A, TTL=3600s. TTL alto retrasa rollbacks, TTL bajo acelera cambios pero genera más consultas.
 
-#### 6.3 TLS – seguridad en tránsito
-- **Imagen:** `imagenes/tls-cert.png`  
-- Ejemplo: CN=example.com, SAN=www.example.com, válido hasta 2025.  
-- Si falla cadena: errores de confianza y riesgo MITM.
+#### TLS – seguridad en tránsito
+![Certificado TLS](imagenes/tls-cert.png)  
+Ejemplo: CN=example.com, SAN=www.example.com, válido hasta 2025.  
+Si la cadena falla: errores de confianza y riesgo de MITM.
 
-#### 6.4 Puertos – estado de runtime
-- **Imagen:** `imagenes/puertos.png`  
-- Ejemplo: 80 (HTTP) y 443 (HTTPS). Falta de 443 = despliegue TLS incompleto.
+#### Puertos – estado de runtime
+![Puertos en escucha](imagenes/puertos.png)  
+Ejemplo: 80 (HTTP) y 443 (HTTPS). La ausencia de 443 indica despliegue TLS incompleto.
 
-#### 6.5 12-Factor
-- **Port binding:** parametrizar el puerto externamente.  
-- **Logs:** a stdout, no rotación manual.  
-- **Anti-patrón:** credenciales en repo → rompe reproducibilidad y seguridad.
+#### 12-Factor
+- Port binding: parametrizar externamente.  
+- Logs: enviados a stdout, no rotación manual.  
+- Anti-patrón: credenciales en el repositorio, lo que afecta reproducibilidad y seguridad.
 
-#### 6.6 Checklist de diagnóstico (intermitencia simulada)
+#### Checklist de diagnóstico
 
-| Paso | Objetivo | Evidencia esperada | Interpretación | Acción siguiente |
-|-----:|----------|--------------------|----------------|------------------|
+| Paso | Objetivo | Evidencia esperada | Interpretación | Acción |
+|-----:|----------|--------------------|----------------|--------|
 | 1 | Validar contrato HTTP | 2xx/3xx y cabeceras esperadas | 4xx/5xx o cabeceras faltantes = contrato roto | Revisar routing/backends |
-| 2 | Verificar DNS y TTL | Registros A/CNAME consistentes | Divergencias o TTL alto → propagación lenta | Esperar ventana o ajustar rollback |
-| 3 | Revisar TLS | Cert válido, CN/SAN correctos, emisora confiable | Cert caducado o mismatch → errores de confianza | Renovar o corregir cadena |
-| 4 | Puertos en escucha | 80/443 expuestos por servicio correcto | 443 ausente = despliegue incompleto; conflicto de puerto | Exponer listener TLS o liberar puerto |
+| 2 | Verificar DNS y TTL | Registros A/CNAME consistentes | Divergencias o TTL alto = propagación lenta | Ajustar rollback o esperar ventana |
+| 3 | Revisar TLS | Cert válido, CN/SAN correctos, emisora confiable | Cert caducado o mismatch = errores de confianza | Renovar o corregir cadena |
+| 4 | Revisar puertos | 80/443 expuestos por el servicio | 443 ausente = despliegue incompleto | Configurar listener TLS o liberar puerto |
 | 5 | Comparar canary vs control | 5xx ≤ 0.1% y p95 estable en 1h | KPI superado = regresión técnica | Rollback inmediato |
-| 6 | Logs de correlación | Request-ID extremo a extremo | Falta correlación = no hay trazabilidad | Habilitar middleware de tracing |
+| 6 | Logs de correlación | Request-ID extremo a extremo | Falta correlación = sin trazabilidad | Habilitar middleware de tracing |
 
 ---
 
 ### 7. Desafíos de DevOps y Mitigaciones
 
-- **Imagen:** `imagenes/desafios_devops.png`  
+![Desafíos de DevOps](imagenes/desafios_devops.png)
 
-**Riesgos y mitigaciones concretas:**  
-- Cambios no observables → feature flags + rollback probado.  
-- Blast radius amplio → canary + límites de tráfico.  
-- Error humano → revisión cruzada + runbooks automatizados.  
+- Cambios no observables → feature flags y rollback probado.  
+- Blast radius amplio → despliegue canary y límites de tráfico.  
+- Errores humanos → revisión cruzada y runbooks automatizados.  
 
-**Experimento controlado (canary vs big-bang):**  
-- Métrica: 5xx y p95 en 60 min.  
+**Experimento controlado:** comparar canary vs big-bang.  
+- Métrica: tasa de 5xx y latencia p95 en 60 min.  
 - Control: release big-bang previo.  
-- Éxito: canary reduce fallos ≥ 50%.  
-- Reversión: rollback si KPI supera umbral.
+- Éxito: canary reduce fallos en ≥ 50%.  
+- Reversión: rollback automático si KPI supera umbral.
 
 ---
 
 ### 8. Arquitectura Mínima para DevSecOps
 
-- **Imagen:** `imagenes/arquitectura-minima.png`  
-- Flujo: Cliente → DNS → HTTP → TLS.  
-- Controles: caché, validación de certificados, contratos API, rate limiting.  
-- Principios 12-Factor aplicados:  
-  - Config por entorno: diffs mínimos, fácil auditoría.  
-  - Logs a stdout: trazabilidad (correlación con X-Request-ID).
+![Arquitectura mínima](imagenes/arquitectura-minima.png)
+
+Flujo: Cliente → DNS → HTTP → TLS.  
+Controles: políticas de caché, validación de certificados, contratos de API y rate limiting.  
+
+Principios 12-Factor aplicados:  
+- Configuración por entorno con diferencias mínimas y fácil auditoría.  
+- Logs a stdout para trazabilidad (correlación con X-Request-ID).
 
 ---
 
 ### Evidencias Incluidas
 
-- Estado HTTP + 2 cabeceras.  
-- Registro DNS + TTL.  
-- CN/SAN y vigencia TLS.  
+- Estado HTTP y dos cabeceras.  
+- Registro DNS y TTL.  
+- CN/SAN y vigencia del certificado TLS.  
 - Puertos en escucha.  
 - Gates de seguridad con umbrales.  
-- KPI técnico + KPI de producto coexistentes.  
-- Checklist operativo con decisiones claras.  
+- KPIs técnicos y de producto.  
+- Checklist operativo.  
 - Diagramas y capturas con marcas visuales.
 
 ---
